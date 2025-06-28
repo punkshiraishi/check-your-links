@@ -84,6 +84,9 @@ function initializeLinkCheckerPro() {
   
   linkCheckerProInstance = new LinkCheckerPro();
   linkCheckerProInstance.init();
+  
+  // グローバルアクセス用
+  window.linkCheckerProInstance = linkCheckerProInstance;
 }
 
 if (document.readyState === 'loading') {

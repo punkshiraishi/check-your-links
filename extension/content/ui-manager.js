@@ -16,7 +16,16 @@ class UIManager {
 
   createPanel() {
     this.panel = Utils.createElement('div', 'lcp-panel');
-    this.panel.innerHTML = `
+    this.panel.innerHTML = this.createPanelContent();
+
+    document.body.appendChild(this.panel);
+    
+    // 初期状態で非表示
+    this.hide();
+  }
+
+  createPanelContent() {
+    return `
       <div class="lcp-header">
         <span class="lcp-title">🔗 リンクチェッカー Pro</span>
         <div class="lcp-controls">
@@ -85,11 +94,6 @@ class UIManager {
         </div>
       </div>
     `;
-
-    document.body.appendChild(this.panel);
-    
-    // 初期状態で非表示
-    this.hide();
   }
 
   attachEventListeners() {
@@ -159,10 +163,19 @@ class UIManager {
       this.panel.querySelector('.lcp-minimized').addEventListener('click', () => this.toggleMinimize());
     } else {
       this.panel.classList.remove('minimized');
-      this.createPanel();
-      this.attachEventListeners();
+      this.restoreFullPanel();
     }
     this.saveState();
+  }
+
+  restoreFullPanel() {
+    this.panel.innerHTML = this.createPanelContent();
+    this.attachEventListeners();
+    
+    // ElementSelectorとの連携を復元するためのイベントを発火
+    if (window.linkCheckerProInstance && window.linkCheckerProInstance.elementSelector) {
+      window.linkCheckerProInstance.elementSelector.updateSelectedElements();
+    }
   }
 
   show() {
