@@ -92,6 +92,10 @@ class UIManager {
               タイムアウト (秒):
               <input type="number" id="lcp-timeout" min="5" max="60" value="30">
             </label>
+            <label>
+              チェック間隔 (ミリ秒):
+              <input type="number" id="lcp-interval" min="100" max="5000" value="1000">
+            </label>
           </div>
         </div>
       </div>
