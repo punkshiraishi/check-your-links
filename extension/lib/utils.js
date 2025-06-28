@@ -1,195 +1,68 @@
-// ユーティリティ関数
+const Utils = {
+  createElement(tag, className, innerHTML) {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (innerHTML) element.innerHTML = innerHTML;
+    return element;
+  },
 
-/**
- * 要素が表示されているかチェック
- */
-function isElementVisible(element) {
-  const style = window.getComputedStyle(element);
-  return style.display !== 'none' && 
-         style.visibility !== 'hidden' && 
-         style.opacity !== '0' &&
-         element.offsetWidth > 0 && 
-         element.offsetHeight > 0;
-}
-
-/**
- * 要素のセレクターを生成
- */
-function generateElementSelector(element) {
-  if (element.id) {
-    return `#${element.id}`;
-  }
-  
-  let selector = element.tagName.toLowerCase();
-  
-  if (element.className) {
-    const classes = element.className.split(' ').filter(c => c.trim());
-    if (classes.length > 0) {
-      selector += '.' + classes.join('.');
-    }
-  }
-  
-  // 親要素との関係で一意性を確保
-  let parent = element.parentElement;
-  if (parent && parent !== document.body) {
-    const siblings = Array.from(parent.children).filter(child => 
-      child.tagName === element.tagName
-    );
+  getLinksFromElement(element) {
+    const links = [];
+    const anchors = element.querySelectorAll('a[href]');
     
-    if (siblings.length > 1) {
-      const index = siblings.indexOf(element);
-      selector += `:nth-of-type(${index + 1})`;
-    }
-  }
-  
-  return selector;
-}
-
-/**
- * URLが有効かチェック
- */
-function isValidUrl(string) {
-  try {
-    const url = new URL(string, window.location.href);
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch (_) {
-    return false;
-  }
-}
-
-/**
- * 相対URLを絶対URLに変換
- */
-function resolveUrl(url, baseUrl = window.location.href) {
-  try {
-    return new URL(url, baseUrl).href;
-  } catch (_) {
-    return null;
-  }
-}
-
-/**
- * 要素から全てのリンクを抽出
- */
-function extractLinksFromElement(element) {
-  const links = [];
-  
-  // <a> タグのリンク
-  const anchors = element.querySelectorAll('a[href]');
-  anchors.forEach(anchor => {
-    const href = anchor.getAttribute('href');
-    if (href && href.trim()) {
-      const resolvedUrl = resolveUrl(href.trim());
-      if (resolvedUrl && isValidUrl(resolvedUrl)) {
+    anchors.forEach(anchor => {
+      const href = anchor.getAttribute('href');
+      if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+        const absoluteUrl = new URL(href, window.location.href).href;
         links.push({
+          url: absoluteUrl,
           element: anchor,
-          url: resolvedUrl,
           text: anchor.textContent.trim(),
-          type: 'anchor'
+          parent: anchor.parentElement
         });
       }
-    }
-  });
-  
-  // <img> タグのsrc
-  const images = element.querySelectorAll('img[src]');
-  images.forEach(img => {
-    const src = img.getAttribute('src');
-    if (src && src.trim()) {
-      const resolvedUrl = resolveUrl(src.trim());
-      if (resolvedUrl && isValidUrl(resolvedUrl)) {
-        links.push({
-          element: img,
-          url: resolvedUrl,
-          text: img.alt || img.title || 'Image',
-          type: 'image'
-        });
-      }
-    }
-  });
-  
-  // <link> タグのhref
-  const linkElements = element.querySelectorAll('link[href]');
-  linkElements.forEach(link => {
-    const href = link.getAttribute('href');
-    if (href && href.trim()) {
-      const resolvedUrl = resolveUrl(href.trim());
-      if (resolvedUrl && isValidUrl(resolvedUrl)) {
-        links.push({
-          element: link,
-          url: resolvedUrl,
-          text: link.rel || 'Link',
-          type: 'link'
-        });
-      }
-    }
-  });
-  
-  return links;
-}
+    });
+    
+    return links;
+  },
 
-/**
- * HTTP ステータスコードからステータスタイプを取得
- */
-function getStatusType(statusCode) {
-  if (statusCode >= 200 && statusCode < 300) {
-    return 'valid';
-  } else if (statusCode >= 300 && statusCode < 400) {
-    return 'redirect';
-  } else if (statusCode >= 400) {
-    return 'broken';
-  } else {
-    return 'unknown';
+  formatStatus(status) {
+    if (status >= 200 && status < 300) return { color: '#4caf50', text: 'OK' };
+    if (status >= 300 && status < 400) return { color: '#ff9800', text: 'Redirect' };
+    if (status >= 400 && status < 500) return { color: '#f44336', text: 'Client Error' };
+    if (status >= 500) return { color: '#f44336', text: 'Server Error' };
+    if (status === 0) return { color: '#9e9e9e', text: 'Unknown' };
+    return { color: '#9e9e9e', text: 'Unknown' };
+  },
+
+  exportToCSV(results) {
+    const headers = ['URL', 'Status', 'Status Text', 'Response Time (ms)', 'Location'];
+    const rows = results.map(r => [
+      r.url,
+      r.status,
+      r.statusText,
+      r.responseTime,
+      r.location || ''
+    ]);
+    
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `link-check-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+  },
+
+  exportToJSON(results) {
+    const jsonContent = JSON.stringify(results, null, 2);
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `link-check-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
   }
-}
-
-/**
- * デバウンス関数
- */
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-/**
- * 要素の境界矩形を取得（スクロールオフセット考慮）
- */
-function getElementBounds(element) {
-  const rect = element.getBoundingClientRect();
-  return {
-    top: rect.top + window.scrollY,
-    left: rect.left + window.scrollX,
-    width: rect.width,
-    height: rect.height,
-    bottom: rect.top + window.scrollY + rect.height,
-    right: rect.left + window.scrollX + rect.width
-  };
-}
-
-/**
- * 色を16進数からRGBAに変換
- */
-function hexToRgba(hex, alpha = 1) {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
-
-/**
- * 要素のテキスト内容を取得（子要素を除く）
- */
-function getDirectTextContent(element) {
-  return Array.from(element.childNodes)
-    .filter(node => node.nodeType === Node.TEXT_NODE)
-    .map(node => node.textContent.trim())
-    .join(' ')
-    .trim();
-}
+};

@@ -1,33 +1,35 @@
 {
   "manifest_version": 3,
-  "name": "リンクチェッカー Pro",
-  "description": "要素を選択してリンクをチェックする拡張機能",
+  "name": "Link Checker Pro",
   "version": "1.0.0",
-  "action": {
-    "default_popup": "popup/popup.html",
-    "default_title": "リンクチェッカー Pro"
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": [
-        "lib/utils.js",
-        "content/element-selector.js",
-        "content/link-checker.js",
-        "content/results-display.js",
-        "content/content.js"
-      ],
-      "css": ["content/content.css"]
-    }
-  ],
-  "background": {
-    "service_worker": "background/background.js"
-  },
+  "description": "Advanced Chrome extension for checking link validity with element selection",
   "permissions": [
     "activeTab",
     "storage"
   ],
   "host_permissions": [
     "<all_urls>"
-  ]
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "lib/utils.js",
+        "lib/http-checker.js",
+        "content/ui-manager.js",
+        "content/element-selector.js",
+        "content/link-checker.js",
+        "content/results-display.js",
+        "content/content.js"
+      ],
+      "css": ["assets/styles/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Link Checker Pro"
+  }
 }
