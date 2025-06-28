@@ -3,7 +3,7 @@ class ElementSelector {
     this.uiManager = uiManager;
     this.selectedElements = [];
     this.hoveredElement = null;
-    this.isActive = true; // 常にアクティブ
+    this.isActive = false; // パネル表示時のみアクティブ
   }
 
   init() {
@@ -26,6 +26,7 @@ class ElementSelector {
   }
 
   handleMouseOver(e) {
+    if (!this.isActive) return;
     if (this.isPartOfPanel(e.target)) return;
     
     const element = this.getSelectableElement(e.target);
@@ -40,6 +41,7 @@ class ElementSelector {
   }
 
   handleMouseOut(e) {
+    if (!this.isActive) return;
     if (!this.hoveredElement) return;
     
     const relatedTarget = e.relatedTarget;
@@ -50,6 +52,7 @@ class ElementSelector {
   }
 
   handleClick(e) {
+    if (!this.isActive) return;
     if (this.isPartOfPanel(e.target)) return;
     
     const element = this.getSelectableElement(e.target);
@@ -147,6 +150,18 @@ class ElementSelector {
     });
     this.updateSelectedElements();
     this.updateStatus();
+  }
+
+  activate() {
+    this.isActive = true;
+  }
+
+  deactivate() {
+    this.isActive = false;
+    if (this.hoveredElement) {
+      this.hoveredElement.classList.remove('lcp-highlight-hover');
+      this.hoveredElement = null;
+    }
   }
 
   isPartOfPanel(element) {

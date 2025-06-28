@@ -87,6 +87,9 @@ class UIManager {
     `;
 
     document.body.appendChild(this.panel);
+    
+    // 初期状態で非表示
+    this.hide();
   }
 
   attachEventListeners() {
@@ -172,6 +175,14 @@ class UIManager {
     this.saveState();
   }
 
+  toggle() {
+    if (this.panel.style.display === 'none') {
+      this.show();
+    } else {
+      this.hide();
+    }
+  }
+
   updateStatus(text) {
     const statusEl = this.panel.querySelector('#lcp-status-text');
     if (statusEl) statusEl.textContent = text;
@@ -240,11 +251,9 @@ class UIManager {
         if (state.currentTab) {
           this.switchTab(state.currentTab);
         }
-        
-        if (!state.isVisible) {
-          this.hide();
-        }
       }
+      // 常に初期状態では非表示
+      this.hide();
     });
   }
 }

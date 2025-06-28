@@ -55,8 +55,10 @@ class LinkCheckerPro {
   togglePanel() {
     if (this.uiManager.panel.style.display === 'none') {
       this.uiManager.show();
+      this.elementSelector.activate();
     } else {
       this.uiManager.hide();
+      this.elementSelector.deactivate();
     }
   }
 
