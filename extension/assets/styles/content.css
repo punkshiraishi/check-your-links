@@ -123,6 +123,10 @@
   margin-bottom: 16px;
 }
 
+.lcp-section:last-child {
+  margin-bottom: 0;
+}
+
 .lcp-control-buttons {
   display: flex;
   gap: 8px;
