@@ -34,9 +34,9 @@ class UIManager {
         </div>
       </div>
       <div class="lcp-tabs">
-        <button class="lcp-tab active" data-tab="selection">◉ 要素選択</button>
-        <button class="lcp-tab" data-tab="results">○ 結果表示</button>
-        <button class="lcp-tab" data-tab="settings">○ 設定</button>
+        <button class="lcp-tab active" data-tab="selection">要素選択</button>
+        <button class="lcp-tab" data-tab="results">結果表示</button>
+        <button class="lcp-tab" data-tab="settings">設定</button>
       </div>
       <div class="lcp-content">
         <div class="lcp-tab-content active" data-content="selection">
@@ -148,8 +148,6 @@ class UIManager {
     
     this.panel.querySelectorAll('.lcp-tab').forEach(tab => {
       tab.classList.toggle('active', tab.dataset.tab === tabName);
-      const icon = tab.dataset.tab === tabName ? '◉' : '○';
-      tab.innerHTML = `${icon} ${tab.textContent.substring(2)}`;
     });
     
     this.panel.querySelectorAll('.lcp-tab-content').forEach(content => {
