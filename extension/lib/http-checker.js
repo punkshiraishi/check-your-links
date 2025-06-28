@@ -2,6 +2,7 @@ class HttpChecker {
   constructor(options = {}) {
     this.concurrency = options.concurrency || 5;
     this.timeout = options.timeout || 30000;
+    this.interval = options.interval || 1000;
     this.cache = new Map();
     this.queue = [];
     this.active = 0;
@@ -13,7 +14,7 @@ class HttpChecker {
     
     return new Promise((resolve) => {
       const processQueue = async () => {
-        while (this.queue.length > 0 && this.active < this.concurrency) {
+        if (this.queue.length > 0 && this.active < this.concurrency) {
           const { link, index } = this.queue.shift();
           this.active++;
           
@@ -40,17 +41,23 @@ class HttpChecker {
           }
           
           this.active--;
-          processQueue();
-        }
-        
-        if (this.active === 0 && this.queue.length === 0) {
+          
+          // 次のリンクをチェックする前に間隔を空ける
+          if (this.queue.length > 0) {
+            setTimeout(() => processQueue(), this.interval);
+          } else if (this.active === 0) {
+            resolve(results);
+          }
+        } else if (this.active === 0 && this.queue.length === 0) {
           resolve(results);
+        } else if (this.queue.length > 0) {
+          // まだキューにアイテムがあるが、同時実行数が上限に達している場合は少し待つ
+          setTimeout(() => processQueue(), 100);
         }
       };
       
-      for (let i = 0; i < this.concurrency; i++) {
-        processQueue();
-      }
+      // 最初のリンクチェックを開始
+      processQueue();
     });
   }
 
