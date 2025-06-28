@@ -37,7 +37,6 @@ class LinkChecker {
     this.results = [];
     this.currentProgress = 0;
     
-    this.elementSelector.stopSelection();
     this.uiManager.switchTab('results');
     this.showProgress();
     this.updateSummary(0, 0, 0);
@@ -216,6 +215,6 @@ class LinkChecker {
     });
     
     this.uiManager.switchTab('selection');
-    this.elementSelector.startSelection();
+    this.elementSelector.refreshLinks();
   }
 }

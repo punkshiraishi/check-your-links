@@ -1,14 +1,14 @@
 class ElementSelector {
   constructor(uiManager) {
     this.uiManager = uiManager;
-    this.isSelecting = false;
     this.selectedElements = [];
-    this.currentFilter = '*';
     this.hoveredElement = null;
+    this.isActive = true; // 常にアクティブ
   }
 
   init() {
     this.attachEventListeners();
+    this.updateStatus();
   }
 
   attachEventListeners() {
@@ -17,40 +17,15 @@ class ElementSelector {
     document.addEventListener('click', this.handleClick.bind(this), true);
     
     const panel = this.uiManager.panel;
-    panel.querySelectorAll('.lcp-filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.setFilter(btn.dataset.filter);
-        panel.querySelectorAll('.lcp-filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    const clearBtn = panel.querySelector('#lcp-clear-selection');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        this.clearSelection();
       });
-    });
-    
-    panel.querySelector('#lcp-clear-selection').addEventListener('click', () => {
-      this.clearSelection();
-    });
-  }
-
-  startSelection() {
-    this.isSelecting = true;
-    this.uiManager.updateStatus('要素をクリックして選択してください');
-    document.body.style.cursor = 'pointer';
-  }
-
-  stopSelection() {
-    this.isSelecting = false;
-    document.body.style.cursor = '';
-    if (this.hoveredElement) {
-      this.hoveredElement.classList.remove('lcp-highlight-hover');
     }
   }
 
-  setFilter(filter) {
-    this.currentFilter = filter;
-    this.startSelection();
-  }
-
   handleMouseOver(e) {
-    if (!this.isSelecting) return;
     if (this.isPartOfPanel(e.target)) return;
     
     const element = this.getSelectableElement(e.target);
@@ -65,7 +40,6 @@ class ElementSelector {
   }
 
   handleMouseOut(e) {
-    if (!this.isSelecting) return;
     if (!this.hoveredElement) return;
     
     const relatedTarget = e.relatedTarget;
@@ -76,32 +50,31 @@ class ElementSelector {
   }
 
   handleClick(e) {
-    if (!this.isSelecting) return;
     if (this.isPartOfPanel(e.target)) return;
-    
-    e.preventDefault();
-    e.stopPropagation();
     
     const element = this.getSelectableElement(e.target);
     if (!element) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
     
     this.toggleElementSelection(element);
   }
 
   getSelectableElement(target) {
-    if (this.currentFilter === '*') {
-      return target;
-    }
+    // div, main, article, section, p などの要素を優先的に選択
+    const preferredTags = ['main', 'article', 'section', 'div', 'aside', 'nav', 'header', 'footer'];
     
     let current = target;
     while (current && current !== document.body) {
-      if (current.tagName.toLowerCase() === this.currentFilter) {
+      if (preferredTags.includes(current.tagName.toLowerCase())) {
         return current;
       }
       current = current.parentElement;
     }
     
-    return null;
+    // 適切な要素が見つからない場合は元の要素を返す
+    return target;
   }
 
   toggleElementSelection(element) {
@@ -119,7 +92,8 @@ class ElementSelector {
       });
     }
     
-    this.uiManager.updateSelectedElements(this.selectedElements);
+    this.updateSelectedElements();
+    this.updateStatus();
   }
 
   clearSelection() {
@@ -127,11 +101,30 @@ class ElementSelector {
       sel.element.classList.remove('lcp-highlight-selected');
     });
     this.selectedElements = [];
-    this.uiManager.updateSelectedElements([]);
-    this.stopSelection();
+    this.updateSelectedElements();
+    this.updateStatus();
+  }
+
+  updateSelectedElements() {
+    this.uiManager.updateSelectedElements(this.selectedElements);
+  }
+
+  updateStatus() {
+    if (this.selectedElements.length === 0) {
+      const allLinks = Utils.getLinksFromElement(document.body);
+      this.uiManager.updateStatus(`ページ内に ${allLinks.length} 個のリンクがあります。要素をクリックして範囲を選択できます。`);
+    } else {
+      const totalLinks = this.selectedElements.reduce((sum, sel) => sum + sel.links.length, 0);
+      this.uiManager.updateStatus(`${this.selectedElements.length} 個の要素を選択中（計 ${totalLinks} 個のリンク）`);
+    }
   }
 
   getSelectedLinks() {
+    if (this.selectedElements.length === 0) {
+      // 何も選択されていない場合はページ全体のリンクを返す
+      return Utils.getLinksFromElement(document.body);
+    }
+    
     const allLinks = [];
     const seen = new Set();
     
@@ -145,6 +138,15 @@ class ElementSelector {
     });
     
     return allLinks;
+  }
+
+  refreshLinks() {
+    // 選択済み要素のリンクを再スキャン
+    this.selectedElements.forEach(sel => {
+      sel.links = Utils.getLinksFromElement(sel.element);
+    });
+    this.updateSelectedElements();
+    this.updateStatus();
   }
 
   isPartOfPanel(element) {

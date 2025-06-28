@@ -32,21 +32,16 @@ class UIManager {
       <div class="lcp-content">
         <div class="lcp-tab-content active" data-content="selection">
           <div class="lcp-selection-mode">
-            <h3>要素選択モード</h3>
-            <div class="lcp-filter-buttons">
-              <button class="lcp-filter-btn" data-filter="div">div</button>
-              <button class="lcp-filter-btn" data-filter="main">main</button>
-              <button class="lcp-filter-btn" data-filter="article">article</button>
-              <button class="lcp-filter-btn" data-filter="section">section</button>
-              <button class="lcp-filter-btn" data-filter="p">p</button>
-              <button class="lcp-filter-btn" data-filter="*">全て</button>
+            <h3>要素選択</h3>
+            <div class="lcp-info">
+              <p>要素をクリックして選択するか、そのままページ全体をチェックできます</p>
             </div>
             <div class="lcp-selected-elements">
-              <h4>選択中:</h4>
+              <h4>選択中の要素:</h4>
               <ul class="lcp-selected-list"></ul>
             </div>
             <div class="lcp-status">
-              <span id="lcp-status-text">要素を選択してください</span>
+              <span id="lcp-status-text">準備中...</span>
             </div>
             <div class="lcp-actions">
               <button class="lcp-btn lcp-btn-primary" id="lcp-start-check">▶ チェック開始</button>
@@ -187,27 +182,37 @@ class UIManager {
     if (!listEl) return;
     
     listEl.innerHTML = '';
-    elements.forEach(el => {
-      const item = Utils.createElement('li');
-      const selector = this.getElementSelector(el.element);
-      const linkCount = el.links.length;
-      item.textContent = `${selector} (${linkCount} リンク)`;
+    if (elements.length === 0) {
+      const item = Utils.createElement('li', 'lcp-no-selection');
+      item.textContent = '要素が選択されていません（ページ全体がチェック対象）';
       listEl.appendChild(item);
-    });
-    
-    this.updateStatus(`${elements.length}要素選択済み (計${elements.reduce((sum, el) => sum + el.links.length, 0)}リンク)`);
+    } else {
+      elements.forEach(el => {
+        const item = Utils.createElement('li');
+        const selector = this.getElementSelector(el.element);
+        const linkCount = el.links.length;
+        item.textContent = `${selector} (${linkCount} リンク)`;
+        listEl.appendChild(item);
+      });
+    }
   }
 
   getElementSelector(element) {
     let selector = element.tagName.toLowerCase();
-    if (element.className) {
-      selector += '.' + element.className.split(' ').join('.');
-    }
     if (element.id) {
       selector = '#' + element.id;
+    } else if (element.className) {
+      const classes = element.className.split(' ')
+        .filter(cls => cls && !cls.startsWith('lcp-'))
+        .slice(0, 2)
+        .join('.');
+      if (classes) {
+        selector += '.' + classes;
+      }
     }
     return selector;
   }
+
 
   saveState() {
     chrome.storage.local.set({

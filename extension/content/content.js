@@ -46,15 +46,6 @@ class LinkCheckerPro {
         case 'togglePanel':
           this.togglePanel();
           break;
-        case 'startSelection':
-          this.elementSelector.startSelection();
-          break;
-        case 'getSelectedElements':
-          sendResponse(this.elementSelector.selectedElements);
-          break;
-        case 'checkSelectedLinks':
-          this.linkChecker.startCheck();
-          break;
         default:
           break;
       }
