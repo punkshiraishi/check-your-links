@@ -1,0 +1,129 @@
+/* コンテンツスクリプト用の基本スタイル */
+
+/* 拡張機能のUI要素のベースフォント設定 */
+.link-checker-overlay,
+.link-checker-selection-panel,
+.link-checker-results-panel {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important;
+  line-height: 1.4 !important;
+  color: #333 !important;
+}
+
+/* ハイライト要素がページのレイアウトに影響しないようにする */
+.link-checker-highlight {
+  box-sizing: border-box !important;
+}
+
+/* 結果ハイライトがページのスタイルを上書きしないようにする */
+.link-checker-result-highlight {
+  box-sizing: border-box !important;
+}
+
+/* スクロールバーのスタイル統一 */
+.link-checker-selected-list::-webkit-scrollbar,
+.link-checker-results-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.link-checker-selected-list::-webkit-scrollbar-track,
+.link-checker-results-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.link-checker-selected-list::-webkit-scrollbar-thumb,
+.link-checker-results-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.link-checker-selected-list::-webkit-scrollbar-thumb:hover,
+.link-checker-results-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* パネルのアニメーション */
+.link-checker-selection-panel,
+.link-checker-results-panel {
+  animation: linkCheckerSlideIn 0.3s ease-out;
+}
+
+@keyframes linkCheckerSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .link-checker-selection-panel,
+  .link-checker-results-panel {
+    width: calc(100vw - 40px) !important;
+    max-width: 320px !important;
+    right: 20px !important;
+  }
+  
+  .link-checker-filter-buttons {
+    justify-content: center !important;
+  }
+  
+  .link-checker-filter-btn {
+    flex: 0 0 auto !important;
+  }
+}
+
+/* 高コントラストモード対応 */
+@media (prefers-contrast: high) {
+  .link-checker-highlight {
+    border-width: 3px !important;
+  }
+  
+  .link-checker-result-highlight {
+    outline-width: 4px !important;
+  }
+}
+
+/* ダークモード対応の準備 */
+@media (prefers-color-scheme: dark) {
+  .link-checker-selection-panel,
+  .link-checker-results-panel {
+    background: #2d3748 !important;
+    color: #e2e8f0 !important;
+  }
+  
+  .link-checker-panel-content,
+  .link-checker-results-summary {
+    background: #374151 !important;
+  }
+  
+  .link-checker-selected-list,
+  .link-checker-results-content {
+    background: #1a202c !important;
+    border-color: #4a5568 !important;
+  }
+  
+  .link-checker-selected-item:hover,
+  .link-checker-result-item:hover {
+    background: #2d3748 !important;
+  }
+  
+  .link-checker-instructions {
+    background: #4a5568 !important;
+    color: #e2e8f0 !important;
+  }
+  
+  .link-checker-filter-btn {
+    background: #374151 !important;
+    border-color: #4a5568 !important;
+    color: #e2e8f0 !important;
+  }
+  
+  .link-checker-filter-btn:hover {
+    background: #4a5568 !important;
+  }
+}
