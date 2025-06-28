@@ -107,6 +107,10 @@ class UIManager {
       tab.addEventListener('click', () => this.switchTab(tab.dataset.tab));
     });
 
+    // 設定値の変更を監視
+    this.panel.querySelector('#lcp-timeout').addEventListener('change', () => this.saveSettings());
+    this.panel.querySelector('#lcp-interval').addEventListener('change', () => this.saveSettings());
+
     document.addEventListener('mousemove', this.drag.bind(this));
     document.addEventListener('mouseup', this.stopDrag.bind(this));
   }
@@ -169,6 +173,9 @@ class UIManager {
   restoreFullPanel() {
     this.panel.innerHTML = this.createPanelContent();
     this.attachEventListeners();
+    
+    // 設定値を復元
+    this.loadSettings();
     
     // ElementSelectorとの連携を復元するためのイベントを発火
     if (window.linkCheckerProInstance && window.linkCheckerProInstance.elementSelector) {
@@ -282,6 +289,39 @@ class UIManager {
     });
   }
 
+  getPageKey() {
+    // URLのホスト名とパス名を組み合わせてページキーを作成
+    const url = new URL(window.location.href);
+    return `${url.hostname}${url.pathname}`;
+  }
+
+  saveSettings() {
+    const pageKey = this.getPageKey();
+    const timeout = parseInt(this.panel.querySelector('#lcp-timeout').value) || 30;
+    const interval = parseInt(this.panel.querySelector('#lcp-interval').value) || 100;
+    
+    chrome.storage.local.set({
+      [`lcpSettings_${pageKey}`]: {
+        timeout,
+        interval
+      }
+    });
+  }
+
+  loadSettings() {
+    const pageKey = this.getPageKey();
+    chrome.storage.local.get(`lcpSettings_${pageKey}`, (data) => {
+      const settings = data[`lcpSettings_${pageKey}`];
+      if (settings) {
+        const timeoutInput = this.panel.querySelector('#lcp-timeout');
+        const intervalInput = this.panel.querySelector('#lcp-interval');
+        
+        if (timeoutInput) timeoutInput.value = settings.timeout || 30;
+        if (intervalInput) intervalInput.value = settings.interval || 100;
+      }
+    });
+  }
+
   restoreState() {
     chrome.storage.local.get('lcpState', (data) => {
       if (data.lcpState) {
@@ -298,6 +338,8 @@ class UIManager {
           this.switchTab(state.currentTab);
         }
       }
+      // 設定値を復元
+      this.loadSettings();
       // 常に初期状態では非表示
       this.hide();
     });
