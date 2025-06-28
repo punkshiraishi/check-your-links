@@ -25,25 +25,26 @@ class UIManager {
   }
 
   createPanelContent() {
+    const i18n = window.i18n;
     return `
       <div class="lcp-header">
-        <span class="lcp-title">🔗 リンクチェッカー Pro</span>
+        <span class="lcp-title">${i18n.t('title')}</span>
         <div class="lcp-controls">
           <button class="lcp-btn-minimize">－</button>
           <button class="lcp-btn-close">✕</button>
         </div>
       </div>
       <div class="lcp-tabs">
-        <button class="lcp-tab active" data-tab="selection">要素選択</button>
-        <button class="lcp-tab" data-tab="results">結果表示</button>
-        <button class="lcp-tab" data-tab="settings">設定</button>
+        <button class="lcp-tab active" data-tab="selection">${i18n.t('tabs.selection')}</button>
+        <button class="lcp-tab" data-tab="results">${i18n.t('tabs.results')}</button>
+        <button class="lcp-tab" data-tab="settings">${i18n.t('tabs.settings')}</button>
       </div>
       <div class="lcp-content">
         <div class="lcp-tab-content active" data-content="selection">
           <div class="lcp-selection-mode">
             <div class="lcp-section">
               <div class="lcp-control-buttons">
-                <button class="lcp-btn lcp-btn-outline" id="lcp-manual-selection">手動選択</button>
+                <button class="lcp-btn lcp-btn-outline" id="lcp-manual-selection">${i18n.t('manualSelection')}</button>
               </div>
             </div>
 
@@ -56,7 +57,7 @@ class UIManager {
             </div>
 
             <div class="lcp-section lcp-action-section">
-              <button class="lcp-btn lcp-btn-primary lcp-btn-large" id="lcp-start-check">チェック開始</button>
+              <button class="lcp-btn lcp-btn-primary lcp-btn-large" id="lcp-start-check">${i18n.t('startCheck')}</button>
             </div>
           </div>
         </div>
@@ -69,24 +70,24 @@ class UIManager {
               <span class="lcp-progress-text">0%</span>
             </div>
             <div class="lcp-summary">
-              <span class="lcp-summary-item">✓ 有効: <span id="lcp-valid-count">0</span></span>
-              <span class="lcp-summary-item">✗ 破損: <span id="lcp-broken-count">0</span></span>
-              <span class="lcp-summary-item">↻ リダイレクト: <span id="lcp-redirect-count">0</span></span>
+              <span class="lcp-summary-item">✓ ${i18n.t('valid')}: <span id="lcp-valid-count">0</span></span>
+              <span class="lcp-summary-item">✗ ${i18n.t('broken')}: <span id="lcp-broken-count">0</span></span>
+              <span class="lcp-summary-item">↻ ${i18n.t('redirect')}: <span id="lcp-redirect-count">0</span></span>
             </div>
             <div class="lcp-results-list"></div>
             <div class="lcp-export-actions" style="display: none;">
-              <button class="lcp-btn lcp-btn-primary" id="lcp-new-check">新規チェック</button>
+              <button class="lcp-btn lcp-btn-primary" id="lcp-new-check">${i18n.t('newCheck')}</button>
             </div>
           </div>
         </div>
         <div class="lcp-tab-content" data-content="settings">
           <div class="lcp-settings">
             <label>
-              タイムアウト (秒):
+              ${i18n.t('timeout')}:
               <input type="number" id="lcp-timeout" min="5" max="60" value="30">
             </label>
             <label>
-              チェック間隔 (ミリ秒):
+              ${i18n.t('interval')}:
               <input type="number" id="lcp-interval" min="100" max="5000" value="100">
             </label>
           </div>
@@ -216,8 +217,8 @@ class UIManager {
       
       item.innerHTML = `
         <div class="lcp-element-info">
-          <span class="lcp-element-name">ページ全体</span>
-          <span class="lcp-element-count">${allLinks.length} リンク</span>
+          <span class="lcp-element-name">${window.i18n.t('pageWide')}</span>
+          <span class="lcp-element-count">${allLinks.length} ${window.i18n.t('links')}</span>
         </div>
       `;
       listEl.appendChild(item);
@@ -231,7 +232,7 @@ class UIManager {
         item.innerHTML = `
           <div class="lcp-element-info">
             <span class="lcp-element-name">${selector}</span>
-            <span class="lcp-element-count">${linkCount} リンク</span>
+            <span class="lcp-element-count">${linkCount} ${window.i18n.t('links')}</span>
           </div>
           <button class="lcp-remove-btn" data-index="${index}">×</button>
         `;

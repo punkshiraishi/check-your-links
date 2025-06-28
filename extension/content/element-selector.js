@@ -183,10 +183,10 @@ class ElementSelector {
     
     if (manualBtn) {
       if (this.isActive) {
-        manualBtn.textContent = '選択終了';
+        manualBtn.textContent = window.i18n.t('endSelection');
         manualBtn.className = 'lcp-btn lcp-btn-success';
       } else {
-        manualBtn.textContent = '手動選択';
+        manualBtn.textContent = window.i18n.t('manualSelection');
         manualBtn.className = 'lcp-btn lcp-btn-outline';
       }
     }

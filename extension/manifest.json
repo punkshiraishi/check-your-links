@@ -18,6 +18,7 @@
       "matches": ["<all_urls>"],
       "js": [
         "lib/utils.js",
+        "lib/i18n.js",
         "lib/http-checker.js",
         "content/ui-manager.js",
         "content/element-selector.js",

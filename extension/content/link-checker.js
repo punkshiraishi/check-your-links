@@ -29,7 +29,7 @@ class LinkChecker {
     
     const links = this.elementSelector.getSelectedLinks();
     if (links.length === 0) {
-      alert('チェックする要素を選択してください');
+      alert(window.i18n.t('noElementsSelected'));
       return;
     }
 
@@ -51,7 +51,7 @@ class LinkChecker {
       this.showResults();
     } catch (error) {
       console.error('Link check error:', error);
-      alert('チェック中にエラーが発生しました: ' + error.message);
+      alert(window.i18n.t('checkingError') + ': ' + error.message);
     } finally {
       this.isChecking = false;
       this.hideProgress();
@@ -126,8 +126,8 @@ class LinkChecker {
           ${this.getStatusIcon(result.status)} ${result.url}
         </div>
         <div class="lcp-result-url">
-          ステータス: ${result.status} ${result.statusText}
-          ${result.responseTime ? ` | 応答時間: ${result.responseTime}ms` : ''}
+          ${window.i18n.t('status')}: ${result.status} ${result.statusText}
+          ${result.responseTime ? ` | ${window.i18n.t('responseTime')}: ${result.responseTime}ms` : ''}
         </div>
       `;
       
@@ -146,7 +146,7 @@ class LinkChecker {
     const redirectResults = this.results.filter(r => r.status >= 300 && r.status < 400);
     
     if (brokenResults.length === 0 && redirectResults.length === 0) {
-      resultsList.innerHTML = '<div class="lcp-result-item">🎉 すべてのリンクが正常です！</div>';
+      resultsList.innerHTML = `<div class="lcp-result-item">${window.i18n.t('allLinksValid')}</div>`;
       return;
     }
     
@@ -159,9 +159,9 @@ class LinkChecker {
           ${this.getStatusIcon(result.status)} ${result.url}
         </div>
         <div class="lcp-result-url">
-          ステータス: ${result.status} ${result.statusText}
-          ${result.responseTime ? ` | 応答時間: ${result.responseTime}ms` : ''}
-          ${result.error ? ` | エラー: ${result.error}` : ''}
+          ${window.i18n.t('status')}: ${result.status} ${result.statusText}
+          ${result.responseTime ? ` | ${window.i18n.t('responseTime')}: ${result.responseTime}ms` : ''}
+          ${result.error ? ` | ${window.i18n.t('error')}: ${result.error}` : ''}
         </div>
       `;
       
