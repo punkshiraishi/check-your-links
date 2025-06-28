@@ -81,7 +81,6 @@ class UIManager {
         </div>
         <div class="lcp-tab-content" data-content="settings">
           <div class="lcp-settings">
-            <h3>設定</h3>
             <label>
               タイムアウト (秒):
               <input type="number" id="lcp-timeout" min="5" max="60" value="30">
