@@ -9,15 +9,8 @@ class ResultsDisplay {
   }
 
   attachEventListeners() {
-    const panel = this.uiManager.panel;
-    
-    panel.querySelector('#lcp-export-csv').addEventListener('click', () => {
-      this.exportCSV();
-    });
-    
-    panel.querySelector('#lcp-export-json').addEventListener('click', () => {
-      this.exportJSON();
-    });
+    // CSV and JSON export buttons have been removed
+    // No event listeners needed for export functionality
   }
 
   exportCSV() {

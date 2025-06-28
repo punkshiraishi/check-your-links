@@ -75,8 +75,6 @@ class UIManager {
             </div>
             <div class="lcp-results-list"></div>
             <div class="lcp-export-actions" style="display: none;">
-              <button class="lcp-btn" id="lcp-export-csv">CSV出力</button>
-              <button class="lcp-btn" id="lcp-export-json">JSON出力</button>
               <button class="lcp-btn lcp-btn-primary" id="lcp-new-check">新規チェック</button>
             </div>
           </div>
