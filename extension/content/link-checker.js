@@ -41,11 +41,10 @@ class LinkChecker {
     this.showProgress();
     this.updateSummary(0, 0, 0);
     
-    const concurrency = parseInt(this.uiManager.panel.querySelector('#lcp-concurrency').value) || 5;
     const timeout = parseInt(this.uiManager.panel.querySelector('#lcp-timeout').value) * 1000 || 30000;
-    const interval = parseInt(this.uiManager.panel.querySelector('#lcp-interval').value) || 1000;
+    const interval = parseInt(this.uiManager.panel.querySelector('#lcp-interval').value) || 100;
     
-    this.httpChecker = new HttpChecker({ concurrency, timeout, interval });
+    this.httpChecker = new HttpChecker({ concurrency: 1, timeout, interval });
     
     try {
       this.results = await this.httpChecker.checkLinks(links, this.onProgress.bind(this));

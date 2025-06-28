@@ -2,7 +2,7 @@ class HttpChecker {
   constructor(options = {}) {
     this.concurrency = options.concurrency || 5;
     this.timeout = options.timeout || 30000;
-    this.interval = options.interval || 1000;
+    this.interval = options.interval || 100;
     this.cache = new Map();
     this.queue = [];
     this.active = 0;
