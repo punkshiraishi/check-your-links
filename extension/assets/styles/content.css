@@ -113,9 +113,32 @@
 
 .lcp-selection-mode h3,
 .lcp-settings h3 {
-  margin: 0 0 12px 0;
+  margin: 0 0 8px 0;
   font-size: 16px;
   color: #333;
+  font-weight: 600;
+}
+
+.lcp-section {
+  margin-bottom: 16px;
+}
+
+.lcp-control-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.lcp-selected-container {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.lcp-action-section {
+  text-align: center;
 }
 
 .lcp-info {
@@ -148,19 +171,71 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 120px;
-  overflow-y: auto;
 }
 
 .lcp-selected-list li {
-  padding: 4px 0;
-  color: #666;
-  font-size: 13px;
+  padding: 8px 12px;
+  color: #495057;
+  font-size: 12px;
+  border-bottom: 1px solid #f1f3f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lcp-selected-list li:last-child {
+  border-bottom: none;
+}
+
+.lcp-selected-list li:first-child:only-child {
+  background: #f8f9fa;
+  font-style: italic;
+}
+
+.lcp-remove-btn {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.lcp-remove-btn:hover {
+  background: #f8f9fa;
+  color: #c82333;
 }
 
 .lcp-no-selection {
-  color: #999 !important;
+  color: #6c757d !important;
   font-style: italic;
+  text-align: center;
+  padding: 16px 12px;
+}
+
+.lcp-element-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lcp-element-name {
+  font-weight: 500;
+  color: #495057;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.lcp-element-count {
+  color: #6c757d;
+  font-size: 11px;
+  margin-left: 8px;
 }
 
 .lcp-status {
@@ -176,6 +251,7 @@
   display: flex;
   gap: 8px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .lcp-btn {
@@ -185,21 +261,57 @@
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .lcp-btn:hover {
-  background: #f5f5f5;
+  background: #f8f9fa;
 }
 
 .lcp-btn-primary {
-  background: #2196F3;
+  background: #007bff;
   color: white;
-  border-color: #2196F3;
+  border-color: #007bff;
 }
 
 .lcp-btn-primary:hover {
-  background: #1976D2;
+  background: #0056b3;
+  border-color: #0056b3;
+}
+
+.lcp-btn-outline {
+  background: white;
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.lcp-btn-outline:hover {
+  background: #007bff;
+  color: white;
+}
+
+.lcp-btn-success {
+  background: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.lcp-btn-success:hover {
+  background: #1e7e34;
+  border-color: #1e7e34;
+}
+
+.lcp-btn-small {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 4px;
+}
+
+.lcp-btn-large {
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .lcp-progress {

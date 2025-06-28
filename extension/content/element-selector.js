@@ -8,7 +8,7 @@ class ElementSelector {
 
   init() {
     this.attachEventListeners();
-    this.updateStatus();
+    this.updateSelectedElements();
   }
 
   attachEventListeners() {
@@ -16,11 +16,17 @@ class ElementSelector {
     document.addEventListener('mouseout', this.handleMouseOut.bind(this));
     document.addEventListener('click', this.handleClick.bind(this), true);
     
+    this.setupButtonListeners();
+  }
+
+  setupButtonListeners() {
     const panel = this.uiManager.panel;
-    const clearBtn = panel.querySelector('#lcp-clear-selection');
-    if (clearBtn) {
-      clearBtn.addEventListener('click', () => {
-        this.clearSelection();
+    
+    const manualBtn = panel.querySelector('#lcp-manual-selection');
+    
+    if (manualBtn) {
+      manualBtn.addEventListener('click', () => {
+        this.toggleSelection();
       });
     }
   }
@@ -96,7 +102,6 @@ class ElementSelector {
     }
     
     this.updateSelectedElements();
-    this.updateStatus();
   }
 
   clearSelection() {
@@ -105,21 +110,19 @@ class ElementSelector {
     });
     this.selectedElements = [];
     this.updateSelectedElements();
-    this.updateStatus();
+  }
+
+  removeElementByIndex(index) {
+    if (index >= 0 && index < this.selectedElements.length) {
+      const removedElement = this.selectedElements[index];
+      removedElement.element.classList.remove('lcp-highlight-selected');
+      this.selectedElements.splice(index, 1);
+      this.updateSelectedElements();
+    }
   }
 
   updateSelectedElements() {
     this.uiManager.updateSelectedElements(this.selectedElements);
-  }
-
-  updateStatus() {
-    if (this.selectedElements.length === 0) {
-      const allLinks = Utils.getLinksFromElement(document.body);
-      this.uiManager.updateStatus(`ページ内に ${allLinks.length} 個のリンクがあります。要素をクリックして範囲を選択できます。`);
-    } else {
-      const totalLinks = this.selectedElements.reduce((sum, sel) => sum + sel.links.length, 0);
-      this.uiManager.updateStatus(`${this.selectedElements.length} 個の要素を選択中（計 ${totalLinks} 個のリンク）`);
-    }
   }
 
   getSelectedLinks() {
@@ -149,11 +152,21 @@ class ElementSelector {
       sel.links = Utils.getLinksFromElement(sel.element);
     });
     this.updateSelectedElements();
-    this.updateStatus();
+  }
+
+  toggleSelection() {
+    this.isActive = !this.isActive;
+    if (!this.isActive && this.hoveredElement) {
+      this.hoveredElement.classList.remove('lcp-highlight-hover');
+      this.hoveredElement = null;
+    }
+    this.updateSelectionButton();
   }
 
   activate() {
-    this.isActive = true;
+    // パネル表示時の初期化
+    this.updateSelectionButton();
+    this.updateSelectedElements();
   }
 
   deactivate() {
@@ -161,6 +174,21 @@ class ElementSelector {
     if (this.hoveredElement) {
       this.hoveredElement.classList.remove('lcp-highlight-hover');
       this.hoveredElement = null;
+    }
+  }
+
+  updateSelectionButton() {
+    const panel = this.uiManager.panel;
+    const manualBtn = panel.querySelector('#lcp-manual-selection');
+    
+    if (manualBtn) {
+      if (this.isActive) {
+        manualBtn.textContent = '選択終了';
+        manualBtn.className = 'lcp-btn lcp-btn-success';
+      } else {
+        manualBtn.textContent = '手動選択';
+        manualBtn.className = 'lcp-btn lcp-btn-outline';
+      }
     }
   }
 

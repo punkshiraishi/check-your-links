@@ -41,20 +41,22 @@ class UIManager {
       <div class="lcp-content">
         <div class="lcp-tab-content active" data-content="selection">
           <div class="lcp-selection-mode">
-            <h3>要素選択</h3>
-            <div class="lcp-info">
-              <p>要素をクリックして選択するか、そのままページ全体をチェックできます</p>
+            <div class="lcp-section">
+              <div class="lcp-control-buttons">
+                <button class="lcp-btn lcp-btn-outline" id="lcp-manual-selection">手動選択</button>
+              </div>
             </div>
-            <div class="lcp-selected-elements">
-              <h4>選択中の要素:</h4>
-              <ul class="lcp-selected-list"></ul>
+
+            <div class="lcp-section">
+              <div class="lcp-selected-elements">
+                <div class="lcp-selected-container">
+                  <ul class="lcp-selected-list"></ul>
+                </div>
+              </div>
             </div>
-            <div class="lcp-status">
-              <span id="lcp-status-text">準備中...</span>
-            </div>
-            <div class="lcp-actions">
-              <button class="lcp-btn lcp-btn-primary" id="lcp-start-check">▶ チェック開始</button>
-              <button class="lcp-btn" id="lcp-clear-selection">選択クリア</button>
+
+            <div class="lcp-section lcp-action-section">
+              <button class="lcp-btn lcp-btn-primary lcp-btn-large" id="lcp-start-check">チェック開始</button>
             </div>
           </div>
         </div>
@@ -174,7 +176,9 @@ class UIManager {
     
     // ElementSelectorとの連携を復元するためのイベントを発火
     if (window.linkCheckerProInstance && window.linkCheckerProInstance.elementSelector) {
+      window.linkCheckerProInstance.elementSelector.setupButtonListeners();
       window.linkCheckerProInstance.elementSelector.updateSelectedElements();
+      window.linkCheckerProInstance.elementSelector.updateSelectionButton();
     }
   }
 
@@ -196,28 +200,61 @@ class UIManager {
     }
   }
 
-  updateStatus(text) {
-    const statusEl = this.panel.querySelector('#lcp-status-text');
-    if (statusEl) statusEl.textContent = text;
-  }
 
   updateSelectedElements(elements) {
     const listEl = this.panel.querySelector('.lcp-selected-list');
     if (!listEl) return;
     
     listEl.innerHTML = '';
+    
     if (elements.length === 0) {
-      const item = Utils.createElement('li', 'lcp-no-selection');
-      item.textContent = '要素が選択されていません（ページ全体がチェック対象）';
+      // ページ全体選択時
+      const item = Utils.createElement('li');
+      const allLinks = Utils.getLinksFromElement(document.body);
+      
+      item.innerHTML = `
+        <div class="lcp-element-info">
+          <span class="lcp-element-name">ページ全体</span>
+          <span class="lcp-element-count">${allLinks.length} リンク</span>
+        </div>
+      `;
       listEl.appendChild(item);
     } else {
-      elements.forEach(el => {
+      // 手動選択要素がある時
+      elements.forEach((el, index) => {
         const item = Utils.createElement('li');
         const selector = this.getElementSelector(el.element);
         const linkCount = el.links.length;
-        item.textContent = `${selector} (${linkCount} リンク)`;
+        
+        item.innerHTML = `
+          <div class="lcp-element-info">
+            <span class="lcp-element-name">${selector}</span>
+            <span class="lcp-element-count">${linkCount} リンク</span>
+          </div>
+          <button class="lcp-remove-btn" data-index="${index}">×</button>
+        `;
         listEl.appendChild(item);
       });
+      
+      // バツボタンのイベントリスナーを追加
+      this.attachRemoveButtonListeners();
+    }
+  }
+
+  attachRemoveButtonListeners() {
+    const removeButtons = this.panel.querySelectorAll('.lcp-remove-btn');
+    removeButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const index = parseInt(e.target.dataset.index);
+        this.removeElementByIndex(index);
+      });
+    });
+  }
+
+  removeElementByIndex(index) {
+    // ElementSelectorに削除を依頼
+    if (window.linkCheckerProInstance && window.linkCheckerProInstance.elementSelector) {
+      window.linkCheckerProInstance.elementSelector.removeElementByIndex(index);
     }
   }
 
