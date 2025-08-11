@@ -147,14 +147,13 @@ class ResultsDisplay {
 
     // CSVフォーマットでクリップボードにコピー
     const i18n = window.i18n;
-    const csvHeaders = ['URL', i18n.t('status'), 'Status Text', i18n.t('responseTime') + '(ms)', 'Location', i18n.t('error')];
+    const csvHeaders = ['URL', i18n.t('status'), 'Status Text', i18n.t('responseTime') + '(ms)', 'Location'];
     const csvRows = this.linkChecker.results.map(result => [
       result.url,
       result.status || '',
       result.statusText || '',
       result.responseTime || '',
-      this.getElementLocation(result.element),
-      result.error || ''
+      this.getElementLocation(result.element)
     ]);
 
     const csvContent = [
