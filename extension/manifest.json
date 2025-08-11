@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Link Checker Pro",
+  "name": "Check Your Links",
   "version": "1.0.0",
   "description": "Advanced Chrome extension for checking link validity with element selection",
   "permissions": [
@@ -31,6 +31,6 @@
     }
   ],
   "action": {
-    "default_title": "Link Checker Pro"
+    "default_title": "Check Your Links"
   }
 }

@@ -20,7 +20,7 @@ class I18n {
     this.translations = {
       ja: {
         // UI Manager
-        title: '🔗 リンクチェッカー Pro',
+        title: '🔗 Check Your Links',
         tabs: {
           selection: '要素選択',
           results: '結果表示',
@@ -67,7 +67,7 @@ class I18n {
       
       en: {
         // UI Manager
-        title: '🔗 Link Checker Pro',
+        title: '🔗 Check Your Links',
         tabs: {
           selection: 'Element Selection',
           results: 'Results',
