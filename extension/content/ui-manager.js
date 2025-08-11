@@ -76,7 +76,8 @@ class UIManager {
             </div>
             <div class="lcp-results-list"></div>
             <div class="lcp-export-actions" style="display: none;">
-              <button class="lcp-btn lcp-btn-primary" id="lcp-new-check">${i18n.t('newCheck')}</button>
+              <button class="lcp-btn lcp-btn-secondary" id="lcp-export-csv">📥 ${i18n.t('exportCSV')}</button>
+              <button class="lcp-btn lcp-btn-secondary" id="lcp-copy-clipboard">📋 ${i18n.t('copyToClipboard')}</button>
             </div>
           </div>
         </div>

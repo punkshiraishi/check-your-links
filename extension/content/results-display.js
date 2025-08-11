@@ -9,13 +9,22 @@ class ResultsDisplay {
   }
 
   attachEventListeners() {
-    // CSV and JSON export buttons have been removed
-    // No event listeners needed for export functionality
+    // CSVエクスポートボタン
+    const csvButton = document.getElementById('lcp-export-csv');
+    if (csvButton) {
+      csvButton.addEventListener('click', () => this.exportCSV());
+    }
+
+    // クリップボードコピーボタン
+    const copyButton = document.getElementById('lcp-copy-clipboard');
+    if (copyButton) {
+      copyButton.addEventListener('click', () => this.copyResultsToClipboard());
+    }
   }
 
   exportCSV() {
     if (!this.linkChecker.results || this.linkChecker.results.length === 0) {
-      alert('エクスポートする結果がありません');
+      alert(window.i18n.t('noResultsToExport'));
       return;
     }
 
@@ -33,7 +42,7 @@ class ResultsDisplay {
 
   exportJSON() {
     if (!this.linkChecker.results || this.linkChecker.results.length === 0) {
-      alert('エクスポートする結果がありません');
+      alert(window.i18n.t('noResultsToExport'));
       return;
     }
 
@@ -116,17 +125,58 @@ class ResultsDisplay {
     const brokenResults = this.linkChecker.results.filter(r => !r.ok || r.status >= 400);
     
     if (brokenResults.length === 0) {
-      alert('破損したリンクがありません');
+      alert(window.i18n.t('noBrokenLinks'));
       return;
     }
 
     const brokenUrls = brokenResults.map(r => r.url).join('\\n');
     
     navigator.clipboard.writeText(brokenUrls).then(() => {
-      alert(`${brokenResults.length}個の破損したリンクをクリップボードにコピーしました`);
+      alert(`${brokenResults.length} ${window.i18n.t('brokenLinksCopied')}`);
     }).catch(err => {
       console.error('Failed to copy to clipboard:', err);
-      alert('クリップボードへのコピーに失敗しました');
+      alert(window.i18n.t('copyFailed'));
+    });
+  }
+
+  copyResultsToClipboard() {
+    if (!this.linkChecker.results || this.linkChecker.results.length === 0) {
+      alert(window.i18n.t('noResultsToCopy'));
+      return;
+    }
+
+    // CSVフォーマットでクリップボードにコピー
+    const i18n = window.i18n;
+    const csvHeaders = ['URL', i18n.t('status'), 'Status Text', i18n.t('responseTime') + '(ms)', 'Location', i18n.t('error')];
+    const csvRows = this.linkChecker.results.map(result => [
+      result.url,
+      result.status || '',
+      result.statusText || '',
+      result.responseTime || '',
+      this.getElementLocation(result.element),
+      result.error || ''
+    ]);
+
+    const csvContent = [
+      csvHeaders.join('\t'),
+      ...csvRows.map(row => row.join('\t'))
+    ].join('\n');
+
+    navigator.clipboard.writeText(csvContent).then(() => {
+      // 成功メッセージを一時的に表示
+      const copyButton = document.getElementById('lcp-copy-clipboard');
+      if (copyButton) {
+        const originalText = copyButton.textContent;
+        copyButton.textContent = '✓ ' + window.i18n.t('copyComplete');
+        copyButton.style.backgroundColor = '#4caf50';
+        setTimeout(() => {
+          copyButton.textContent = originalText;
+          copyButton.style.backgroundColor = '';
+        }, 2000);
+      }
+    }).catch(err => {
+      console.error('Failed to copy to clipboard:', err);
+      alert(window.i18n.t('copyFailed'));
     });
   }
 

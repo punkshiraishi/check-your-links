@@ -58,11 +58,16 @@ class I18n {
         // Element info
         elementRemoved: '要素が削除されました',
         
-        // Export messages (kept for potential future use)
+        // Export messages
+        exportCSV: 'CSV ダウンロード',
+        copyToClipboard: 'クリップボードにコピー',
         noResultsToExport: 'エクスポートする結果がありません',
+        noResultsToCopy: 'コピーする結果がありません',
         noBrokenLinks: '破損したリンクがありません',
         brokenLinksCopied: '個の破損したリンクをクリップボードにコピーしました',
-        copyFailed: 'クリップボードへのコピーに失敗しました'
+        copyFailed: 'クリップボードへのコピーに失敗しました',
+        copyComplete: 'コピー完了',
+        reset: 'リセット'
       },
       
       en: {
@@ -105,11 +110,16 @@ class I18n {
         // Element info
         elementRemoved: 'Element removed',
         
-        // Export messages (kept for potential future use)
+        // Export messages
+        exportCSV: 'Download CSV',
+        copyToClipboard: 'Copy to Clipboard',
         noResultsToExport: 'No results to export',
+        noResultsToCopy: 'No results to copy',
         noBrokenLinks: 'No broken links found',
         brokenLinksCopied: 'broken links copied to clipboard',
-        copyFailed: 'Failed to copy to clipboard'
+        copyFailed: 'Failed to copy to clipboard',
+        copyComplete: 'Copied!',
+        reset: 'Reset'
       }
     };
   }
