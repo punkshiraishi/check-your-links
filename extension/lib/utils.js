@@ -35,6 +35,15 @@ const Utils = {
     return { color: '#9e9e9e', text: 'Unknown' };
   },
 
+  // Escape a single CSV cell per RFC 4180
+  escapeCSVCell(value) {
+    if (value === null || value === undefined) return '';
+    const stringValue = String(value);
+    const escaped = stringValue.replace(/"/g, '""');
+    // Quote if contains comma, quote, CR or LF
+    return /[",\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
+  },
+
   exportToCSV(results) {
     const headers = ['URL', 'Status', 'Status Text', 'Response Time (ms)', 'Location'];
     const rows = results.map(r => [
@@ -44,13 +53,11 @@ const Utils = {
       r.responseTime,
       r.location || ''
     ]);
-    
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\\n');
-    
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const lines = [headers, ...rows]
+      .map(row => row.map(cell => Utils.escapeCSVCell(cell)).join(','))
+      .join('\\r\\n');
+    const csvWithBom = '\\uFEFF' + lines;
+    const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `link-check-${new Date().toISOString().slice(0, 10)}.csv`;
