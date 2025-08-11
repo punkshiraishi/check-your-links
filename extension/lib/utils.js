@@ -56,8 +56,8 @@ const Utils = {
     const lines = [headers, ...rows]
       .map(row => row.map(cell => Utils.escapeCSVCell(cell)).join(','))
       .join('\\r\\n');
-    const csvWithBom = '\\uFEFF' + lines;
-    const blob = new Blob([csvWithBom], { type: 'text/csv;charset=utf-8;' });
+    // BOMは付与しない（Google Sheetsでヘッダーに\uFEFFが混入するため）
+    const blob = new Blob([lines], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `link-check-${new Date().toISOString().slice(0, 10)}.csv`;
