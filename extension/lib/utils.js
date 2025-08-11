@@ -44,7 +44,8 @@ const Utils = {
     return /[",\n\r]/.test(escaped) ? `"${escaped}"` : escaped;
   },
 
-  exportToCSV(results) {
+  // Build CSV content from results without side effects (for testing and export)
+  buildCSVFromResults(results) {
     const headers = ['URL', 'Status', 'Status Text', 'Response Time (ms)', 'Location'];
     const rows = results.map(r => [
       r.url,
@@ -53,11 +54,23 @@ const Utils = {
       r.responseTime,
       r.location || ''
     ]);
-    const lines = [headers, ...rows]
+    return [headers, ...rows]
       .map(row => row.map(cell => Utils.escapeCSVCell(cell)).join(','))
       .join('\r\n');
+  },
+
+  // Build generic TSV content (for clipboard tests)
+  buildTSV(headers, rows) {
+    const lines = [headers, ...rows]
+      .map(row => row.map(cell => (cell === null || cell === undefined ? '' : String(cell))).join('\t'))
+      .join('\n');
+    return lines;
+  },
+
+  exportToCSV(results) {
+    const csv = Utils.buildCSVFromResults(results);
     // BOMは付与しない（Google Sheetsでヘッダーに\uFEFFが混入するため）
-    const blob = new Blob([lines], { type: 'text/csv;charset=utf-8;' });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `link-check-${new Date().toISOString().slice(0, 10)}.csv`;
