@@ -55,7 +55,7 @@ const Utils = {
     ]);
     const lines = [headers, ...rows]
       .map(row => row.map(cell => Utils.escapeCSVCell(cell)).join(','))
-      .join('\\r\\n');
+      .join('\r\n');
     // BOMは付与しない（Google Sheetsでヘッダーに\uFEFFが混入するため）
     const blob = new Blob([lines], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
