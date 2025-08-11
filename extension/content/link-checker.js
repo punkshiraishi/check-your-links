@@ -18,10 +18,6 @@ class LinkChecker {
     panel.querySelector('#lcp-start-check').addEventListener('click', () => {
       this.startCheck();
     });
-    
-    panel.querySelector('#lcp-new-check').addEventListener('click', () => {
-      this.resetCheck();
-    });
   }
 
   async startCheck() {

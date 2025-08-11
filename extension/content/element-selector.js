@@ -23,10 +23,17 @@ class ElementSelector {
     const panel = this.uiManager.panel;
     
     const manualBtn = panel.querySelector('#lcp-manual-selection');
+    const resetBtn = panel.querySelector('#lcp-reset-selection');
     
     if (manualBtn) {
       manualBtn.addEventListener('click', () => {
         this.toggleSelection();
+      });
+    }
+    
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        this.resetAll();
       });
     }
   }
@@ -194,5 +201,23 @@ class ElementSelector {
 
   isPartOfPanel(element) {
     return element.closest('.lcp-panel') !== null;
+  }
+  
+  resetAll() {
+    // 選択モードを終了
+    if (this.isActive) {
+      this.isActive = false;
+      if (this.hoveredElement) {
+        this.hoveredElement.classList.remove('lcp-highlight-hover');
+        this.hoveredElement = null;
+      }
+      this.updateSelectionButton();
+    }
+    
+    // 選択された要素をクリア
+    this.clearSelection();
+    
+    // 結果タブを選択タブに切り替え
+    this.uiManager.switchTab('selection');
   }
 }

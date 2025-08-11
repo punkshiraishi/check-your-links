@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:chromewebstore.google.com)",
+      "Bash(mkdir:*)",
+      "Bash(convert:*)",
+      "Bash(rm:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(touch:*)",
+      "Bash(ls:*)",
+      "Bash(git commit:*)",
+      "Bash(rg:*)",
+      "Bash(open:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)",
+      "Bash(git restore:*)"
+    ],
+    "deny": []
+  }
+}

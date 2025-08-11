@@ -45,6 +45,7 @@ class UIManager {
             <div class="lcp-section">
               <div class="lcp-control-buttons">
                 <button class="lcp-btn lcp-btn-outline" id="lcp-manual-selection">${i18n.t('manualSelection')}</button>
+                <button class="lcp-btn lcp-btn-outline" id="lcp-reset-selection">🔄 ${i18n.t('reset')}</button>
               </div>
             </div>
 
