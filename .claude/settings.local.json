@@ -15,7 +15,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(curl:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(echo $PATH)"
     ],
     "deny": []
   }

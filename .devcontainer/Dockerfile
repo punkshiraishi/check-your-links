@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   man-db \
   unzip \
   gnupg2 \
+  curl \
   gh \
   iptables \
   ipset \
@@ -89,3 +90,7 @@ RUN chmod +x /usr/local/bin/init-firewall.sh && \
   echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-firewall && \
   chmod 0440 /etc/sudoers.d/node-firewall
 USER node
+
+# Install Cursor CLI and expose its binary path for the node user
+RUN curl -fsS https://cursor.com/install | bash
+ENV PATH=$PATH:/home/node/.cursor/bin:/home/node/.local/bin
