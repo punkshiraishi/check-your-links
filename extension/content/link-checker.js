@@ -37,6 +37,11 @@ class LinkChecker {
     this.results = [];
     this.currentProgress = 0;
     
+    // Clear all existing visual indicators before starting new check
+    document.querySelectorAll('.lcp-link-valid, .lcp-link-broken, .lcp-link-redirect, .lcp-link-warning').forEach(el => {
+      el.classList.remove('lcp-link-valid', 'lcp-link-broken', 'lcp-link-redirect', 'lcp-link-warning');
+    });
+    
     this.uiManager.switchTab('results');
     this.showProgress();
     this.updateSummary(0, 0, 0);
@@ -207,12 +212,6 @@ class LinkChecker {
     this.isChecking = false;
     this.results = [];
     this.currentProgress = 0;
-    
-    this.results.forEach(result => {
-      if (result.element) {
-        result.element.classList.remove('lcp-link-valid', 'lcp-link-broken', 'lcp-link-redirect', 'lcp-link-warning');
-      }
-    });
     
     this.uiManager.switchTab('selection');
     this.elementSelector.refreshLinks();
