@@ -1,0 +1,44 @@
+{
+  "extName": { "message": "Check Your Links" },
+  "extDescription": { "message": "Advanced Chrome extension for checking link validity with element selection" },
+
+  "title": { "message": "🔗 Check Your Links" },
+  "tabs_selection": { "message": "Element Selection" },
+  "tabs_results": { "message": "Results" },
+  "tabs_settings": { "message": "Settings" },
+
+  "manualSelection": { "message": "Manual Selection" },
+  "endSelection": { "message": "End Selection" },
+  "startCheck": { "message": "Start Check" },
+
+  "valid": { "message": "Valid" },
+  "broken": { "message": "Broken" },
+  "redirect": { "message": "Redirect" },
+  "newCheck": { "message": "New Check" },
+  "allLinksValid": { "message": "🎉 All links are working!" },
+
+  "timeout": { "message": "Timeout (seconds)" },
+  "interval": { "message": "Check Interval (milliseconds)" },
+
+  "noElementsSelected": { "message": "Please select elements to check" },
+  "checkingError": { "message": "An error occurred during checking" },
+  "pageWide": { "message": "Entire Page" },
+  "links": { "message": "links" },
+  "status": { "message": "Status" },
+  "responseTime": { "message": "Response Time" },
+  "error": { "message": "Error" },
+
+  "progress": { "message": "Progress" },
+
+  "elementRemoved": { "message": "Element removed" },
+
+  "exportCSV": { "message": "Download CSV" },
+  "copyToClipboard": { "message": "Copy to Clipboard" },
+  "noResultsToExport": { "message": "No results to export" },
+  "noResultsToCopy": { "message": "No results to copy" },
+  "noBrokenLinks": { "message": "No broken links found" },
+  "brokenLinksCopied": { "message": "broken links copied to clipboard" },
+  "copyFailed": { "message": "Failed to copy to clipboard" },
+  "copyComplete": { "message": "Copied!" },
+  "reset": { "message": "Reset" }
+}

@@ -1,0 +1,44 @@
+{
+  "extName": { "message": "Check Your Links" },
+  "extDescription": { "message": "要素選択に対応した高度なリンク有効性チェッカー" },
+
+  "title": { "message": "🔗 Check Your Links" },
+  "tabs_selection": { "message": "要素選択" },
+  "tabs_results": { "message": "結果表示" },
+  "tabs_settings": { "message": "設定" },
+
+  "manualSelection": { "message": "手動選択" },
+  "endSelection": { "message": "選択終了" },
+  "startCheck": { "message": "チェック開始" },
+
+  "valid": { "message": "有効" },
+  "broken": { "message": "破損" },
+  "redirect": { "message": "リダイレクト" },
+  "newCheck": { "message": "新規チェック" },
+  "allLinksValid": { "message": "🎉 すべてのリンクが正常です！" },
+
+  "timeout": { "message": "タイムアウト (秒)" },
+  "interval": { "message": "チェック間隔 (ミリ秒)" },
+
+  "noElementsSelected": { "message": "チェックする要素を選択してください" },
+  "checkingError": { "message": "チェック中にエラーが発生しました" },
+  "pageWide": { "message": "ページ全体" },
+  "links": { "message": "リンク" },
+  "status": { "message": "ステータス" },
+  "responseTime": { "message": "応答時間" },
+  "error": { "message": "エラー" },
+
+  "progress": { "message": "進行状況" },
+
+  "elementRemoved": { "message": "要素が削除されました" },
+
+  "exportCSV": { "message": "CSV ダウンロード" },
+  "copyToClipboard": { "message": "クリップボードにコピー" },
+  "noResultsToExport": { "message": "エクスポートする結果がありません" },
+  "noResultsToCopy": { "message": "コピーする結果がありません" },
+  "noBrokenLinks": { "message": "破損したリンクがありません" },
+  "brokenLinksCopied": { "message": "個の破損したリンクをクリップボードにコピーしました" },
+  "copyFailed": { "message": "クリップボードへのコピーに失敗しました" },
+  "copyComplete": { "message": "コピー完了" },
+  "reset": { "message": "リセット" }
+}
